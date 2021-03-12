@@ -15,7 +15,7 @@ setup(
     keywords="busy wait tdd test builder sleep wait pytest",
     url="https://github.com/rockem/busypie",
     packages=find_packages(exclude=['tests*']),
-    setup_requires=["pytest-runner"],
+    setup_requires=["pytest-runner", "pyhamcrest"],
     tests_require=[
         'pytest==5.4.3',
         'pytest-asyncio==0.12.0',

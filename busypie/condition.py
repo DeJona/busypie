@@ -1,6 +1,8 @@
 from copy import deepcopy
 from functools import partial
 
+from hamcrest import assert_that
+
 from busypie import runner
 from busypie.awaiter import AsyncConditionAwaiter
 from busypie.durations import ONE_HUNDRED_MILLISECONDS, SECOND
@@ -46,6 +48,15 @@ class ConditionBuilder:
 
     def until(self, func):
         return runner.run(self._wait_for(func, lambda f: f()))
+
+    def until_assert_that(self, *args, **kwargs):
+        class ConditionFunc:
+            def __call__(self):
+                try:
+                    return assert_that(*args, **kwargs) is None
+                except AssertionError as e:
+                    self.__name__ = str(e)
+        return self.until(ConditionFunc())
 
     def _wait_for(self, func, checker):
         return AsyncConditionAwaiter(
